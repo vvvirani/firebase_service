@@ -2,9 +2,12 @@ import 'package:firebase_service/firebase_service.dart';
 import 'package:firebase_service/src/authentication/auth.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-
 class AppleAuthentication extends AppleAuth {
+  AppleAuthentication._();
+
   final String _providerId = 'apple.com';
+
+  static AppleAuthentication get instance => AppleAuthentication._();
 
   @override
   Future<AuthResult> signIn() async {

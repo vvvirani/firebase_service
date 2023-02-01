@@ -3,7 +3,11 @@ import 'package:firebase_service/src/authentication/auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart' as fb_ath;
 
 class FacebookAuthentication extends FacebookAuth {
+  FacebookAuthentication._();
+
   final fb_ath.FacebookAuth _facebookAuth = fb_ath.FacebookAuth.instance;
+
+  static FacebookAuthentication get instance => FacebookAuthentication._();
 
   @override
   Future<AuthResult> signIn() async {

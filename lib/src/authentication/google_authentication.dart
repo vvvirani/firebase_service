@@ -3,7 +3,11 @@ import 'package:firebase_service/src/authentication/auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleAuthentication extends GoogleAuth {
+  GoogleAuthentication._();
+
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  static GoogleAuthentication get instance => GoogleAuthentication._();
 
   @override
   Future<AuthResult> signIn() async {

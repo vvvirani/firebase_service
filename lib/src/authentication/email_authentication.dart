@@ -3,7 +3,11 @@ import 'package:firebase_service/src/authentication/auth.dart';
 import 'package:firebase_service/src/models/auth_result.dart';
 
 class EmailAuthentication extends EmailAuth {
+  EmailAuthentication._();
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  static EmailAuthentication get instance => EmailAuthentication._();
 
   @override
   Future<AuthResult> signUp({
