@@ -1,3 +1,4 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_service/src/authentication/auth.dart';
 import 'package:firebase_service/src/models/auth_result.dart';
@@ -53,12 +54,15 @@ class EmailAuthentication extends EmailAuth {
 
   @override
   Future<AuthResult> changePassword({
+    required String email,
     required String oldPassword,
     required String newPassword,
   }) async {
     try {
-      UserCredential? userCredential =
-          await _reauthenticateWithCredential(password: oldPassword);
+      UserCredential? userCredential = await _reauthenticateWithCredential(
+        email: email,
+        password: oldPassword,
+      );
       await userCredential?.user?.updatePassword(newPassword);
       return AuthResult(status: true);
     } on FirebaseAuthException catch (e) {
@@ -67,9 +71,10 @@ class EmailAuthentication extends EmailAuth {
   }
 
   @override
-  Future<AuthResult> delete({required String password}) async {
+  Future<AuthResult> delete(
+      {required String email, required String password}) async {
     try {
-      await _reauthenticateWithCredential(password: password)
+      await _reauthenticateWithCredential(email: email, password: password)
           ?.then((credential) => credential.user?.delete());
       return AuthResult(status: true);
     } on FirebaseAuthException catch (e) {
@@ -86,9 +91,9 @@ class EmailAuthentication extends EmailAuth {
   }
 
   Future<UserCredential>? _reauthenticateWithCredential(
-      {required String password}) {
+      {required String email, required String password}) {
     final AuthCredential authCredential = EmailAuthProvider.credential(
-      email: currentUser?.email ?? '',
+      email: email,
       password: password,
     );
     return currentUser?.reauthenticateWithCredential(authCredential);
