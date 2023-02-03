@@ -15,6 +15,16 @@ mixin AuthError {
         message =
             'Your account has been blocked or disabled. Contact our support team to unlock it, then try again.';
         break;
+      case 'wrong-password':
+        message = 'Email or Password are incorrect.';
+        break;
+      case 'email-already-in-use':
+        message = 'This email address already used by another account';
+        break;
+      case 'user-not-found':
+      case 'auth/user-not-found':
+        message = 'Account not found';
+        break;
       default:
         message = nullOrValue<String>(e.message);
         break;
