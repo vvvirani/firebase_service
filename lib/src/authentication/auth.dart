@@ -22,12 +22,11 @@ abstract class EmailAuth with AuthError {
   Future<AuthResult> sendPasswordResetEmail({required String email});
 
   Future<AuthResult> changePassword({
-    required String email,
     required String oldPassword,
     required String newPassword,
   });
 
-  Future<AuthResult> delete({required String email, required String password});
+  Future<AuthResult> delete({required String password});
 
   Future<void> signOut();
 
