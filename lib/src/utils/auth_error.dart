@@ -16,7 +16,7 @@ mixin AuthError {
             'Your account has been blocked or disabled. Contact our support team to unlock it, then try again.';
         break;
       case 'wrong-password':
-        message = 'Email or Password are incorrect.';
+        message = 'Password is incorrect.';
         break;
       case 'email-already-in-use':
         message = 'This email address already used by another account';
