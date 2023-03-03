@@ -45,9 +45,9 @@ class GoogleAuthentication extends GoogleAuth {
   @override
   Future<AuthResult> delete() async {
     try {
-      await firebaseAuth.currentUser
-          ?.reauthenticateWithProvider(GoogleAuthProvider())
-          .then((credential) => credential.user?.delete());
+      UserCredential? credential = await firebaseAuth.currentUser
+          ?.reauthenticateWithProvider(GoogleAuthProvider());
+      await credential?.user?.delete();
       return AuthResult(status: true);
     } on FirebaseAuthException catch (e) {
       return exception(e);

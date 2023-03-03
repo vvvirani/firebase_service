@@ -41,9 +41,9 @@ class AppleAuthentication extends AppleAuth {
   @override
   Future<AuthResult> delete() async {
     try {
-      await firebaseAuth.currentUser
-          ?.reauthenticateWithProvider(AppleAuthProvider())
-          .then((credential) => credential.user?.delete());
+      UserCredential? credential = await firebaseAuth.currentUser
+          ?.reauthenticateWithProvider(AppleAuthProvider());
+      await credential?.user?.delete();
       return AuthResult(status: true);
     } on FirebaseAuthException catch (e) {
       return exception(e);

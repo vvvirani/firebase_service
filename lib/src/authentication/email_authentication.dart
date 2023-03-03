@@ -69,8 +69,9 @@ class EmailAuthentication extends EmailAuth {
   @override
   Future<AuthResult> delete({required String password}) async {
     try {
-      await _reauthenticateWithCredential(password: password)
-          ?.then((credential) => credential.user?.delete());
+      UserCredential? credential =
+          await _reauthenticateWithCredential(password: password);
+      await credential?.user?.delete();
       return AuthResult(status: true);
     } on FirebaseAuthException catch (e) {
       return exception(e);
