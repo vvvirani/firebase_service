@@ -25,7 +25,10 @@ class AppleAuthentication extends AppleAuth {
       );
       UserCredential userCredential =
           await firebaseAuth.signInWithCredential(credential);
-      return result.copyWith(status: true, user: userCredential.user);
+
+      User? user = userCredential.user;
+      user?.updateDisplayName(appleIdCredential.givenName);
+      return result.copyWith(status: true, user: user);
     } on FirebaseAuthException catch (e) {
       return exception(e);
     } catch (e) {
