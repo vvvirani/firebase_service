@@ -1,6 +1,6 @@
+import 'package:apple_sign_in_safety/apple_sign_in.dart';
 import 'package:firebase_service/firebase_service.dart';
 import 'package:firebase_service/src/authentication/auth.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AppleAuthentication extends AppleAuth {
   AppleAuthentication._();
@@ -13,23 +13,38 @@ class AppleAuthentication extends AppleAuth {
   Future<AuthResult> signIn() async {
     AuthResult result = AuthResult(status: false);
     try {
-      AuthorizationCredentialAppleID appleIdCredential =
-          await SignInWithApple.getAppleIDCredential(
-        scopes: AppleIDAuthorizationScopes.values,
-      );
-      OAuthProvider oAuthProvider = OAuthProvider(_providerId);
+      final AuthorizationResult authResult = await AppleSignIn.performRequests([
+        const AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
+      ]);
 
-      OAuthCredential credential = oAuthProvider.credential(
-        idToken: appleIdCredential.identityToken,
-        accessToken: appleIdCredential.authorizationCode,
-      );
-      UserCredential userCredential =
-          await firebaseAuth.signInWithCredential(credential);
+      switch (authResult.status) {
+        case AuthorizationStatus.authorized:
+          OAuthProvider oAuthProvider = OAuthProvider(_providerId);
 
-      User? user = userCredential.user;
-      user?.updateDisplayName(
-          '${appleIdCredential.givenName} ${appleIdCredential.familyName}');
-      return result.copyWith(status: true, user: user);
+          OAuthCredential credential = oAuthProvider.credential(
+            idToken: String.fromCharCodes(
+                authResult.credential?.identityToken ?? []),
+            accessToken: String.fromCharCodes(
+                authResult.credential?.authorizationCode ?? []),
+          );
+          UserCredential userCredential =
+              await firebaseAuth.signInWithCredential(credential);
+
+          User? user = userCredential.user;
+          result = result.copyWith(status: true, user: user);
+          break;
+        case AuthorizationStatus.error:
+          result = result.copyWith(
+            status: false,
+            message: authResult.error?.localizedFailureReason,
+          );
+          break;
+        case AuthorizationStatus.cancelled:
+          result = result.copyWith(status: false, message: 'Cancelled');
+          break;
+        default:
+      }
+      return result;
     } on FirebaseAuthException catch (e) {
       return exception(e);
     } catch (e) {
