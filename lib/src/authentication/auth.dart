@@ -38,3 +38,5 @@ abstract class GoogleAuth = Auth with AuthError;
 abstract class FacebookAuth = Auth with AuthError;
 
 abstract class AppleAuth = Auth with AuthError;
+
+abstract class AnonymousAuth = Auth with AuthError;
